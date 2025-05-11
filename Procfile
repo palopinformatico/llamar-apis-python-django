@@ -1,0 +1,1 @@
+web: gunicorn clima_app.wsgi:application

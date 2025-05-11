@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Clima, Chistes y Sismos</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Lordicon -->
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+</head>
+<body class="bg-light text-dark">
+    <div class="container py-5">
+        <h1 class="mb-4 text-center">
+            <lord-icon
+                src="https://cdn.lordicon.com/aklfruoc.json"
+                trigger="loop"
+                colors="primary:#0d6efd"
+                style="width:50px;height:50px">
+            </lord-icon>
+            Clima |
+            <lord-icon
+                src="https://cdn.lordicon.com/tdtlrbly.json"
+                trigger="loop"
+                colors="primary:#ffc107"
+                style="width:50px;height:50px">
+            </lord-icon>
+            Chistes |
+            <lord-icon
+                src="https://cdn.lordicon.com/hbvyhtse.json"
+                trigger="loop"
+                colors="primary:#198754"
+                style="width:50px;height:50px">
+            </lord-icon>
+            Sismos
+        </h1>
+
+        <!-- Formulario de clima -->
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" name="ciudad" class="form-control" placeholder="Ingresa una ciudad (ej: Santiago)" required>
+                <button class="btn btn-primary" type="submit" name="buscar_clima">Consultar Clima</button>
+            </div>
+        </form>
+
+        <!-- Botones secundarios -->
+        <div class="d-flex gap-2 mb-4">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="obtener_chiste" class="btn btn-warning">Obtener Chiste de Chuck Norris</button>
+            </form>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="obtener_sismos" class="btn btn-success">Ver últimos sismos en Chile</button>
+            </form>
+        </div>
+
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+
+        {% if clima %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/wxnxiano.json"
+                            trigger="loop"
+                            colors="primary:#0d6efd"
+                            style="width:40px;height:40px">
+                        </lord-icon>
+                        Clima en {{ clima.ciudad }}
+                    </h2>
+                    <p class="card-text">Temperatura: <strong>{{ clima.temperatura }} °C</strong></p>
+                    <p class="card-text">Descripción: {{ clima.descripcion }}</p>
+                    <img src="http://openweathermap.org/img/wn/{{ clima.icono }}@2x.png" alt="icono clima">
+                </div>
+            </div>
+        {% endif %}
+
+        {% if chiste %}
+            <div class="card mb-4 border-warning">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/eflfmgmj.json"
+                            trigger="loop"
+                            colors="primary:#ffc107"
+                            style="width:40px;height:40px">
+                        </lord-icon>
+                        Chiste de Chuck Norris
+                    </h2>
+                    <blockquote class="blockquote">{{ chiste }}</blockquote>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if sismos %}
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title mb-3">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/hbvyhtse.json"
+                            trigger="loop"
+                            colors="primary:#198754"
+                            style="width:40px;height:40px">
+                        </lord-icon>
+                        Últimos Sismos
+                    </h2>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Magnitud</th>
+                                    <th>Profundidad</th>
+                                    <th>Referencia Geográfica</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sismo in sismos %}
+                                <tr>
+                                    <td>{{ sismo.Fecha }}</td>
+                                    <td>{{ sismo.Hora }}</td>
+                                    <td>{{ sismo.Magnitud }}</td>
+                                    <td>{{ sismo.Profundidad }}</td>
+                                    <td>{{ sismo.RefGeografica }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
